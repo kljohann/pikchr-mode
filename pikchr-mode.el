@@ -52,6 +52,15 @@
          (? (| "%" "in" "cm" "mm" "pt" "px" "pc"))
          eow)
        . font-lock-constant-face)
+      ;; Built-in variables
+      (,(regexp-opt
+         '("arcrad" "arrowhead" "arrowht" "arrowwid" "bottommargin" "boxht"
+         "boxrad" "boxwid" "charht" "charwid" "circlerad" "color" "cylht"
+         "cylrad" "cylwid" "dashwid" "dotrad" "ellipseht" "ellipsewid" "fileht"
+         "filerad" "filewid" "fill" "fontscale" "layer" "leftmargin" "lineht"
+         "linerad" "linewid" "margin" "movewid" "ovalht" "ovalwid" "rightmargin"
+         "scale" "textht" "textwid" "thickness" "topmargin") 'symbols)
+       . font-lock-builtin-face)
       ;; Variable definitions
       (,(rx bol ws* (group (+ symb)) ws* (? (any "-+*/"))"=")
        (1 font-lock-variable-name-face))
