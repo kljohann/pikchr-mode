@@ -53,7 +53,7 @@
          eow)
        . font-lock-constant-face)
       ;; Variable definitions
-      (,(rx bol ws* (group (+ symb)) ws* "=")
+      (,(rx bol ws* (group (+ symb)) ws* (? (any "-+*/"))"=")
        (1 font-lock-variable-name-face))
       ;; Place labels
       (,(rx bol ws* (group (any "A-Z") (* (any alnum "_"))) ws* ":")
