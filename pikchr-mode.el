@@ -32,7 +32,8 @@
 
 (defconst pikchr-mode-font-lock-keywords
   (rx-let ((ws* (* space))
-           (symb (| word (syntax symbol))))
+           (symb (| word (syntax symbol)))
+           (stmt-start (| bol ";")))
     `(
       ;; Ordinals
       (,(rx bow (+ digit) (| "th" "rd" "nd" "st") eow)
@@ -62,10 +63,10 @@
          "scale" "textht" "textwid" "thickness" "topmargin") 'symbols)
        . font-lock-builtin-face)
       ;; Variable definitions
-      (,(rx bol ws* (group (+ symb)) ws* (? (any "-+*/"))"=")
+      (,(rx stmt-start ws* (group (+ symb)) ws* (? (any "-+*/"))"=")
        (1 font-lock-variable-name-face))
       ;; Place labels
-      (,(rx bol ws* (group (any "A-Z") (* (any alnum "_"))) ws* ":")
+      (,(rx stmt-start ws* (group (any "A-Z") (* (any alnum "_"))) ws* ":")
        (1 font-lock-function-name-face))
       ;; Objects
       (,(regexp-opt
