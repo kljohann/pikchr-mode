@@ -114,6 +114,9 @@
 (define-derived-mode pikchr-mode prog-mode "pikchr mode"
   "Major mode for the pikchr diagram markup language."
   :syntax-table pikchr-mode-syntax-table
+  (setq-local comment-use-syntax t)
+  (setq-local comment-start "#")
+  (setq-local comment-end "")
   (setq font-lock-defaults '(pikchr-mode-font-lock-keywords)))
 
 ;;;###autoload
