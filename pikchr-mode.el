@@ -63,7 +63,7 @@
          "scale" "textht" "textwid" "thickness" "topmargin") 'symbols)
        . font-lock-builtin-face)
       ;; Variable definitions
-      (,(rx stmt-start ws* (group (+ symb)) ws* (? (any "-+*/"))"=")
+      (,(rx stmt-start ws* (group (any "a-z" "$@") (+ symb)) ws* (? (any "-+*/"))"=")
        (1 font-lock-variable-name-face))
       ;; Place labels
       (,(rx stmt-start ws* (group (any "A-Z") (* (any alnum "_"))) ws* ":")
