@@ -89,12 +89,19 @@
 
 (defconst pikchr-mode-syntax-table
   (let ((table (make-syntax-table)))
+    (modify-syntax-entry ?\n ">" table)
+    (modify-syntax-entry ?# "<" table)
     (modify-syntax-entry ?$ "_" table)
+    (modify-syntax-entry '(?% . ?&) "." table)
+    (modify-syntax-entry ?* ". 23b" table)
+    (modify-syntax-entry '(?+ . ?.) "." table)
     (modify-syntax-entry ?@ "_" table)
-    (modify-syntax-entry ?/ ". 124b" table)
-    (modify-syntax-entry ?* ". 23" table)
-    (modify-syntax-entry ?# "< b" table)
-    (modify-syntax-entry ?\n "> b" table)
+    (modify-syntax-entry ?< "(>" table)
+    (modify-syntax-entry ?= "." table)
+    (modify-syntax-entry ?> ")<" table)
+    (modify-syntax-entry ?/ ". 124" table)
+    (modify-syntax-entry ?_ "." table)
+    (modify-syntax-entry ?| "." table)
     table)
   "Syntax table for `pikchr-mode'.")
 
