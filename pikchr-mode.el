@@ -30,6 +30,56 @@
 (require 'rx)
 (require 'regexp-opt)
 
+(defgroup pikchr nil
+  "Pikchr support for Emacs."
+  :group 'languages)
+
+(defcustom pikchr-executable
+  (executable-find "pikchr")
+  "Location of the pikchr executable."
+  :group 'pikchr
+  :type '(file :must-match t)
+  :risky t)
+
+(defconst pikchr-preview-buffer-name " *pikchr preview*")
+
+(defun pikchr-preview-region (start end)
+  "Preview the pikchr diagram in the region between START and END."
+  (interactive "r")
+  (let ((infile (make-temp-file "pikchr-mode-"))
+        (preview-buffer (get-buffer-create pikchr-preview-buffer-name)))
+    (unwind-protect
+        (progn
+          (write-region start end infile nil 'silent)
+          (let ((inhibit-read-only t))
+            (with-current-buffer preview-buffer
+              (erase-buffer)
+              (call-process pikchr-executable nil
+                            t nil "--svg-only" infile))))
+      (delete-file infile))
+    (with-current-buffer preview-buffer
+      (goto-char (point-min))
+      (if (looking-at "<svg")
+          (image-mode)
+        (delete-trailing-whitespace)
+        (pikchr-mode)
+        (font-lock-ensure)
+        (view-mode)))
+    (display-buffer preview-buffer)))
+
+(defun pikchr-preview-dwim ()
+  "Preview the pikchr diagram in the current buffer.
+
+Uses the region if it is active.  If a prefix argument is given
+instead, the buffer up to and including the current line.
+Else, the whole buffer is used."
+  (interactive)
+  (cond ((use-region-p)
+         (pikchr-preview-region (region-beginning) (region-end)))
+        (current-prefix-arg
+         (pikchr-preview-region (point-min) (line-end-position)))
+        (t (pikchr-preview-region (point-min) (point-max)))))
+
 (defconst pikchr-mode-font-lock-keywords
   (rx-let ((ws* (* space))
            (symb (| word (syntax symbol)))
@@ -107,6 +157,7 @@
 
 (defconst pikchr-mode-map
   (let ((map (make-sparse-keymap)))
+    (define-key map (kbd "C-c C-c") 'pikchr-preview-dwim)
     map)
   "Keymap for `pikchr-mode'.")
 
