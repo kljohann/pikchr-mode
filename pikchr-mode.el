@@ -27,6 +27,7 @@
 
 ;;; Code:
 
+(require 'rng-util)
 (require 'rx)
 (require 'regexp-opt)
 
@@ -42,6 +43,10 @@
   :risky t)
 
 (defconst pikchr-preview-buffer-name " *pikchr preview*")
+
+(defun pikchr--face-to-style (face)
+  (format "font-family: %s;"
+          (face-attribute face :family)))
 
 (defun pikchr-preview-region (start end)
   "Preview the pikchr diagram in the region between START and END."
@@ -60,7 +65,14 @@
     (with-current-buffer preview-buffer
       (goto-char (point-min))
       (if (looking-at "<svg")
-          (image-mode)
+          (progn
+            (forward-symbol 1)
+            (let ((inhibit-read-only t))
+              (insert
+               (format " style=\"%s\""
+                       (rng-escape-string
+                        (pikchr--face-to-style 'variable-pitch)))))
+            (image-mode))
         (delete-trailing-whitespace)
         (pikchr-mode)
         (font-lock-ensure)
