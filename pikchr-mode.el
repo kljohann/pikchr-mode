@@ -118,11 +118,11 @@ Else, the whole buffer is used."
       ;; Built-in variables
       (,(regexp-opt
          '("arcrad" "arrowhead" "arrowht" "arrowwid" "bottommargin" "boxht"
-         "boxrad" "boxwid" "charht" "charwid" "circlerad" "color" "cylht"
-         "cylrad" "cylwid" "dashwid" "dotrad" "ellipseht" "ellipsewid" "fileht"
-         "filerad" "filewid" "fill" "fontscale" "layer" "leftmargin" "lineht"
-         "linerad" "linewid" "margin" "movewid" "ovalht" "ovalwid" "rightmargin"
-         "scale" "textht" "textwid" "thickness" "topmargin") 'symbols)
+           "boxrad" "boxwid" "charht" "charwid" "circlerad" "color" "cylht"
+           "cylrad" "cylwid" "dashwid" "dotrad" "ellipseht" "ellipsewid" "fileht"
+           "filerad" "filewid" "fill" "fontscale" "layer" "leftmargin" "lineht"
+           "linerad" "linewid" "margin" "movewid" "ovalht" "ovalwid" "rightmargin"
+           "scale" "textht" "textwid" "thickness" "topmargin") 'symbols)
        . font-lock-builtin-face)
       ;; Variable definitions
       (,(rx stmt-start ws* (group (any "a-z" "$@") (+ symb)) ws* (? (any "-+*/"))"=")
@@ -133,20 +133,20 @@ Else, the whole buffer is used."
       ;; Objects
       (,(regexp-opt
          '("arc" "arrow" "box" "circle" "cylinder" "dot" "ellipse" "file" "line"
-         "move" "oval" "spline" "text") 'symbols)
+           "move" "oval" "spline" "text") 'symbols)
        . font-lock-type-face)
       ;; Keywords
       (,(regexp-opt
          '("above" "abs" "aligned" "and" "as" "assert" "at" "behind" "below"
-         "between" "big" "bold" "bot" "bottom" "c" "ccw" "center" "chop" "close"
-         "color" "cos" "cw" "dashed" "define" "diameter" "dist" "dotted" "down"
-         "e" "east" "end" "even" "fill" "first" "fit" "from" "go" "heading"
-         "height" "ht" "in" "int" "invis" "invisible" "italic" "last" "left"
-         "ljust" "max" "min" "n" "ne" "north" "nw" "of" "previous" "print" "rad"
-         "radius" "right" "rjust" "s" "same" "se" "sin" "small" "solid" "south"
-         "sqrt" "start" "sw" "t" "the" "then" "thick" "thickness" "thin" "to"
-         "top" "until" "up" "vertex" "w" "way" "west" "wid" "width" "with"
-         "x" "y" "<-" "->" "<->") 'symbols)
+           "between" "big" "bold" "bot" "bottom" "c" "ccw" "center" "chop" "close"
+           "color" "cos" "cw" "dashed" "define" "diameter" "dist" "dotted" "down"
+           "e" "east" "end" "even" "fill" "first" "fit" "from" "go" "heading"
+           "height" "ht" "in" "int" "invis" "invisible" "italic" "last" "left"
+           "ljust" "max" "min" "n" "ne" "north" "nw" "of" "previous" "print" "rad"
+           "radius" "right" "rjust" "s" "same" "se" "sin" "small" "solid" "south"
+           "sqrt" "start" "sw" "t" "the" "then" "thick" "thickness" "thin" "to"
+           "top" "until" "up" "vertex" "w" "way" "west" "wid" "width" "with"
+           "x" "y" "<-" "->" "<->") 'symbols)
        . font-lock-keyword-face))))
 
 (defconst pikchr-mode-syntax-table
