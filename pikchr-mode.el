@@ -27,9 +27,10 @@
 
 ;;; Code:
 
+(require 'ob)
+(require 'regexp-opt)
 (require 'rng-util)
 (require 'rx)
-(require 'regexp-opt)
 
 (defgroup pikchr nil
   "Pikchr support for Emacs."
@@ -185,6 +186,28 @@ Else, the whole buffer is used."
 
 ;;;###autoload
 (add-to-list 'auto-mode-alist '("\\.pikchr\\'" . pikchr-mode))
+
+(defvar org-babel-default-header-args:pikchr
+  '((:results . "output file") (:exports . "results"))
+  "Default arguments to use when evaluating a pikchr source block.")
+
+(defun org-babel-execute:pikchr (body params)
+  "Execute a block of pikchr code with org-babel.
+This function is called by `org-babel-execute-src-block', which passes
+the block contents as BODY and its header argumenst as PARAMS."
+  (unless (assq :file params)
+    (user-error "Missing :file header argument for pikchr block"))
+  (let ((in-file (org-babel-temp-file "pikchr-")))
+    (with-temp-file in-file
+      (insert body))
+    (org-babel-eval
+     (concat (org-babel-process-file-name pikchr-executable)
+             " --svg-only " (org-babel-process-file-name in-file))
+     "")))
+
+(defun org-babel-prep-session:pikchr (_session _params)
+  "Return an error because pikchr does not support sessions."
+  (user-error "Sessions are not supported by pikchr"))
 
 (provide 'pikchr-mode)
 ;;; pikchr-mode.el ends here
