@@ -45,6 +45,7 @@
 (defconst pikchr-preview-buffer-name " *pikchr preview*")
 
 (defun pikchr--face-to-style (face)
+  "Derive CSS properties from FACE."
   (format "font-family: %s;"
           (face-attribute face :family)))
 
