@@ -37,7 +37,8 @@
   :group 'languages)
 
 (defcustom pikchr-executable
-  (executable-find "pikchr")
+  (or (executable-find "pikchr")
+      "pikchr")
   "Location of the pikchr executable."
   :group 'pikchr
   :type '(file :must-match t)
