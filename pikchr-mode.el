@@ -109,7 +109,7 @@ Else, the whole buffer is used."
       (,(rx
          bow
          (? (any "+-"))
-         (| (: (+ digit) (? "." (+ digit)))
+         (| (: (+ digit) (? "." (* digit)))
             (: "." (+ digit)))
          (? (any "eE")
             (? any "+-")
