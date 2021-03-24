@@ -102,6 +102,10 @@ Else, the whole buffer is used."
             (stmt-start (| bol ";"))
             (place-name (: (any "A-Z") (* (any alnum "_"))))
             (place-label (: stmt-start ws* (group place-name) ws* ":"))
+            (variable-def
+             (&rest extra)
+             (: stmt-start ws* (group (any extra "$@") (+ symb))
+                ws* (? (any "-+*/")) "="))
             (macro-def (: stmt-start ws* "define" (+ space)
                           (group (any "a-z" "_$@") (+ symb)))))
      ,@body))
@@ -137,7 +141,7 @@ Else, the whole buffer is used."
            "scale" "textht" "textwid" "thickness" "topmargin") 'symbols)
        . font-lock-builtin-face)
       ;; Variable definitions
-      (,(rx stmt-start ws* (group (any "a-z" "$@") (+ symb)) ws* (? (any "-+*/"))"=")
+      (,(rx (variable-def "a-z"))
        (1 font-lock-variable-name-face))
       ;; Place labels
       (,(rx place-label)
@@ -199,6 +203,8 @@ Else, the whole buffer is used."
   (setq-local imenu-generic-expression
               (pikchr-mode--rx-let
                 `(("Places" ,(rx place-label) 1)
+                  ;; Only variable definitions beginning with $ and @.
+                  ("Variables" ,(rx (variable-def)) 1)
                   ("Macros" ,(rx macro-def) 1)))))
 
 ;;;###autoload
