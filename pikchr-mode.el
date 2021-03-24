@@ -95,10 +95,17 @@ Else, the whole buffer is used."
          (pikchr-preview-region (point-min) (line-end-position)))
         (t (pikchr-preview-region (point-min) (point-max)))))
 
+(defmacro pikchr-mode--rx-let (&rest body)
+  (declare (indent defun) (debug (body)))
+  `(rx-let ((ws* (* space))
+            (symb (| word (syntax symbol)))
+            (stmt-start (| bol ";"))
+            (place-name (: (any "A-Z") (* (any alnum "_"))))
+            (place-label (: stmt-start ws* (group place-name) ws* ":")))
+     ,@body))
+
 (defconst pikchr-mode-font-lock-keywords
-  (rx-let ((ws* (* space))
-           (symb (| word (syntax symbol)))
-           (stmt-start (| bol ";")))
+  (pikchr-mode--rx-let
     `(
       ;; Ordinals
       (,(rx bow (+ digit) (| "th" "rd" "nd" "st") eow)
@@ -131,7 +138,7 @@ Else, the whole buffer is used."
       (,(rx stmt-start ws* (group (any "a-z" "$@") (+ symb)) ws* (? (any "-+*/"))"=")
        (1 font-lock-variable-name-face))
       ;; Place labels
-      (,(rx stmt-start ws* (group (any "A-Z") (* (any alnum "_"))) ws* ":")
+      (,(rx place-label)
        (1 font-lock-function-name-face))
       ;; Objects
       (,(regexp-opt
@@ -183,7 +190,10 @@ Else, the whole buffer is used."
   (setq-local comment-use-syntax t)
   (setq-local comment-start "#")
   (setq-local comment-end "")
-  (setq font-lock-defaults '(pikchr-mode-font-lock-keywords)))
+  (setq font-lock-defaults '(pikchr-mode-font-lock-keywords))
+  (setq-local imenu-generic-expression
+              (pikchr-mode--rx-let
+                `(("Places" ,(rx place-label) 1)))))
 
 ;;;###autoload
 (add-to-list 'auto-mode-alist '("\\.pikchr\\'" . pikchr-mode))
