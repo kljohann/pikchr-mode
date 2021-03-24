@@ -101,7 +101,9 @@ Else, the whole buffer is used."
             (symb (| word (syntax symbol)))
             (stmt-start (| bol ";"))
             (place-name (: (any "A-Z") (* (any alnum "_"))))
-            (place-label (: stmt-start ws* (group place-name) ws* ":")))
+            (place-label (: stmt-start ws* (group place-name) ws* ":"))
+            (macro-def (: stmt-start ws* "define" (+ space)
+                          (group (any "a-z" "_$@") (+ symb)))))
      ,@body))
 
 (defconst pikchr-mode-font-lock-keywords
@@ -139,6 +141,9 @@ Else, the whole buffer is used."
        (1 font-lock-variable-name-face))
       ;; Place labels
       (,(rx place-label)
+       (1 font-lock-function-name-face))
+      ;; Macros
+      (,(rx macro-def)
        (1 font-lock-function-name-face))
       ;; Objects
       (,(regexp-opt
@@ -193,7 +198,8 @@ Else, the whole buffer is used."
   (setq font-lock-defaults '(pikchr-mode-font-lock-keywords))
   (setq-local imenu-generic-expression
               (pikchr-mode--rx-let
-                `(("Places" ,(rx place-label) 1)))))
+                `(("Places" ,(rx place-label) 1)
+                  ("Macros" ,(rx macro-def) 1)))))
 
 ;;;###autoload
 (add-to-list 'auto-mode-alist '("\\.pikchr\\'" . pikchr-mode))
