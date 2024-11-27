@@ -149,6 +149,8 @@ Else, the whole buffer is used."
       ;; Macros
       (,(rx macro-def)
        (1 font-lock-function-name-face))
+      (,(regexp-opt '("define") 'symbols)
+       . font-lock-preprocessor-face)
       ;; Objects
       (,(regexp-opt
          '("arc" "arrow" "box" "circle" "cylinder" "dot" "ellipse" "file" "line"
@@ -158,7 +160,7 @@ Else, the whole buffer is used."
       (,(regexp-opt
          '("above" "abs" "aligned" "and" "as" "assert" "at" "behind" "below"
            "between" "big" "bold" "bot" "bottom" "c" "ccw" "center" "chop" "close"
-           "color" "cos" "cw" "dashed" "define" "diameter" "dist" "dotted" "down"
+           "color" "cos" "cw" "dashed" "diameter" "dist" "dotted" "down"
            "e" "east" "end" "even" "fill" "first" "fit" "from" "go" "heading"
            "height" "ht" "in" "int" "invis" "invisible" "italic" "last" "left"
            "ljust" "max" "min" "n" "ne" "north" "nw" "of" "previous" "print" "rad"
