@@ -47,7 +47,7 @@
 (defconst pikchr-preview-buffer-name " *pikchr preview*")
 
 (defun pikchr--face-to-style (face)
-  "Derive CSS properties from FACE."
+  "Derive CSS declarations from FACE."
   (format "font-family: %s;"
           (face-attribute face :family)))
 
@@ -67,14 +67,17 @@
       (delete-file infile))
     (with-current-buffer preview-buffer
       (goto-char (point-min))
-      (if (looking-at "<svg")
-          (progn
-            (forward-symbol 1)
-            (let ((inhibit-read-only t))
-              (insert
-               (format " style=\"%s\""
-                       (rng-escape-string
-                        (pikchr--face-to-style 'variable-pitch)))))
+      (if (looking-at (rx "<svg" (group-n 1 (* (not ">"))) ">"))
+          (let* ((tag (save-match-data (xml-parse-tag)))
+                 (attrs (xml-node-attributes tag))
+                 (extra-style (pikchr--face-to-style 'variable-pitch))
+                 (inhibit-read-only t))
+            ;; Prepend extra CSS declarations to the style attribute.
+            (cl-callf2 concat extra-style (alist-get 'style attrs ""))
+            (replace-match "" 'fixed 'literal nil 1)
+            (cl-loop for (key . value) in attrs
+                     do (insert ?\  (symbol-name key) "=\""
+                                (xml-escape-string value) ?\"))
             (image-mode))
         (delete-trailing-whitespace)
         (pikchr-mode)
