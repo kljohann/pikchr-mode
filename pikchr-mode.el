@@ -230,7 +230,10 @@ the block contents as BODY and its header argumenst as PARAMS."
       (insert body))
     (org-babel-eval
      (concat (org-babel-process-file-name pikchr-executable)
-             " --svg-only " (org-babel-process-file-name in-file))
+             " --svg-only "
+             (when (assq :dark-mode params) "--dark-mode ")
+             (when (assq :cmdline params) (cdr (assq :cmdline params)))
+             (org-babel-process-file-name in-file))
      "")))
 
 (defun org-babel-prep-session:pikchr (_session _params)
